@@ -6,6 +6,7 @@ export class DatabaseConfig {
 
   static getInstance(): Pool {
     if (!DatabaseConfig.instance) {
+      // 👉 Asegurar que dotenv se carga antes de leer process.env
       DatabaseConfig.instance = new Pool({
         host: process.env.DB_HOST,
         port: parseInt(process.env.DB_PORT || '5432'),

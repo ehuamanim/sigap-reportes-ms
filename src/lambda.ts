@@ -11,14 +11,14 @@ export const handler = async (
   
     try {
     const { httpMethod } = event;
-    const path = event.resource;
+    const path = event.path;
 
     let result;
 
     switch (`${httpMethod} ${path}`) {
 
-      case 'GET /clientes/stats':
-        result = await userController.getActiveUsersStats();
+      case 'GET /reportes/clientes/stats':
+        result = await userController.getActiveClientesStats();
         break;
       default:
         return {
@@ -27,7 +27,7 @@ export const handler = async (
             'Content-Type': 'application/json',
             'Access-Control-Allow-Origin': '*',
           },
-          body: JSON.stringify({ message: 'Route not found' }),
+          body: JSON.stringify({ route: `${httpMethod} ${path}`, message: 'Route not found' }),
         };
     }
 
@@ -37,7 +37,9 @@ export const handler = async (
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
       },
-      body: JSON.stringify(result),
+      body: JSON.stringify({
+        payload: result
+      }),
     };
 
   } catch (error) {

@@ -1,3 +1,4 @@
 export interface IClienteRepository {
-  countActiveUsers(): Promise<number>;
+  countActiveClientes(): Promise<number>;
+  countActiveProspectos(): Promise<number>;
 }

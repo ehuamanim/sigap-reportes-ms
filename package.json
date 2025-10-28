@@ -3,23 +3,34 @@
   "version": "1.0.0",
   "description": "Microservicio para reportes",
   "scripts": {
+    "dev": "ts-node local-server.ts",
+    "dev:watch": "nodemon --exec ts-node local-server.ts",
     "build": "tsc && webpack --mode production",
-    "package": "npm run build && cd dist && zip -r lambda.zip .",
-    "deploy:infra": "cd infrastructure && npm run deploy",
-    "deploy:lambda": "npm run package && aws lambda update-function-code --function-name UserMicroserviceStack-UserLambdaFunction --zip-file fileb://dist/lambda.zip",
+    "build:local": "tsc",
+    "package": "npm run build && powershell Compress-Archive -Path dist/* -DestinationPath dist/lambda.zip -Force",
+    "deploy:lambda": "npm run package && aws lambda update-function-code --function-name ReporteMicroserviceFn --zip-file fileb://dist/lambda.zip",
     "deploy": "npm run deploy:infra && npm run deploy:lambda",
-    "test": "jest"
+    "test": "jest",
+    "start": "node dist/local-server.js"
   },
   "author": "Ericson Huamaní",
   "license": "ISC",
   "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
+    "express": "^4.18.2",
     "pg": "^8.16.3"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.152",
+    "@types/cors": "^2.8.13",
+    "@types/express": "^4.17.17",
     "@types/node": "^24.3.1",
     "@types/pg": "^8.15.5",
+    "copy-webpack-plugin": "^13.0.1",
+    "nodemon": "^3.0.1",
     "ts-loader": "^9.5.4",
+    "ts-node": "^10.9.1",
     "typescript": "^5.9.2",
     "webpack": "^5.101.3",
     "webpack-cli": "^6.0.1"

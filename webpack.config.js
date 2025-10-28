@@ -16,13 +16,29 @@ module.exports = {
   },
   resolve: {
     extensions: ['.ts', '.js'],
+    fallback:{
+      "pg-native": false
+    }
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'lambda.js',
+    filename: 'index.js',
     libraryTarget: 'commonjs2',
   },
   externals: {
     'aws-sdk': 'aws-sdk',
   },
+  plugins: [
+        new CopyWebpackPlugin({
+            patterns: [
+                {
+                    from: 'src/domain/queries/sql/**/*.sql',
+                    to({context, absoluteFilename}) {
+                        const rel = path.relative(path.join(context, 'src', 'domain', 'queries', 'sql'), absoluteFilename);
+                        return `src/domain/queries/sql/${rel}`;
+                    },
+                },
+            ],
+        }),
+    ]
 }
