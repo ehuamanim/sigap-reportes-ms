@@ -18,7 +18,7 @@ app.use(express.json());
 
 // Inicializar la aplicación
 const sigapApp = new App();
-const controller = sigapApp.getUserController();
+const controller = sigapApp.getReportePolizaController();
 
 const auth = {
     userId: "mockUserId",
@@ -29,10 +29,10 @@ const auth = {
 controller.setRequestContext(auth);
 
 // Rutas
-app.get('/reportes/poliza/stats', async (req, res) => {
+app.get('/reporte/poliza/stats', async (req, res) => {
   try {
-    const result = await controller.getActiveClientesStats();
-    res.json({ payload: result });
+    const result = await controller.getReportePolizaStats();
+    res.json( result );
   } catch (error) {
     console.error('Error:', error);
     const statusCode = error.name === 'ClienteNotFoundException' ? 404 : 500;
@@ -51,6 +51,6 @@ app.get('/health', (req, res) => {
 // Iniciar servidor
 app.listen(port, () => {
   console.log(`🚀 Servidor SIGAP ejecutándose en http://localhost:${port}`);
-  console.log(`📊 Endpoint disponible: http://localhost:${port}/reportes/poliza/stats`);
+  console.log(`📊 Endpoint disponible: http://localhost:${port}/reporte/poliza/stats`);
   console.log(`❤️ Health check: http://localhost:${port}/health`);
 });

@@ -1,60 +1,46 @@
-// src/lambda.ts
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import { App } from './app';
+import { HttpCommons } from './shared/commons';
+
+const getClientIp = (event: APIGatewayProxyEvent): string =>
+    event.headers['X-Forwarded-For']?.split(',')[0]?.trim() ||
+    event.headers['x-forwarded-for']?.split(',')[0]?.trim() ||
+    event.requestContext.identity.sourceIp ||
+    'unknown';
+
+const getAuthContext = (event: APIGatewayProxyEvent) => ({
+    userId: event.requestContext.authorizer?.userId || '',
+    nickname: event.requestContext.authorizer?.nickname || '',
+    role: event.requestContext.authorizer?.role || '',
+    clientIp: getClientIp(event)
+});
 
 const app = new App();
-const userController = app.getUserController();
+const controller = app.getReportePolizaController();
 
-export const handler = async (
-  event: APIGatewayProxyEvent
-): Promise<APIGatewayProxyResult> => {
-  
+const routes = {
+  'GET /reporte/poliza/stats': (event: APIGatewayProxyEvent) => controller.getReportePolizaStats(),
+};
+
+export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
     try {
-    const { httpMethod } = event;
-    const path = event.path;
+        const {httpMethod, path} = event;
+        const routeKey = `${httpMethod} ${path}`;
 
-    let result;
+        // Inyectar contexto
+        const authContext = getAuthContext(event);
+        controller.setRequestContext(authContext);
 
-    switch (`${httpMethod} ${path}`) {
+        let routeHandler = routes[routeKey];
 
-      case 'GET /reportes/clientes/stats':
-        result = await userController.getActiveClientesStats();
-        break;
-      default:
-        return {
-          statusCode: 404,
-          headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-          },
-          body: JSON.stringify({ route: `${httpMethod} ${path}`, message: 'Route not found' }),
-        };
+        if (!routeHandler) {
+            return HttpCommons.errorResponse(404, 'Route not found');
+        }
+
+        const result = await routeHandler(event);
+        return HttpCommons.response(200, result);
+    } catch (error) {
+        console.error(error);
+        return HttpCommons.errorResponse(500, 'Internal server error');
     }
-
-    return {
-      statusCode: 200,
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-      },
-      body: JSON.stringify({
-        payload: result
-      }),
-    };
-
-  } catch (error) {
-    console.error('Error:', error);
-    
-    return {
-      statusCode: error.name === 'ClienteNotFoundException' ? 404 : 500,
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-      },
-      body: JSON.stringify({
-        message: error.message || 'Internal server error',
-        error: error.name || 'UnknownError'
-      }),
-    };
-  }
 };

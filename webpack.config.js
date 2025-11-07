@@ -1,5 +1,6 @@
 // webpack.config.js
 const path = require('path');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   entry: './src/lambda.ts',
@@ -16,6 +17,9 @@ module.exports = {
   },
   resolve: {
     extensions: ['.ts', '.js'],
+    alias: {
+      '@': path.resolve(__dirname, 'src'),
+    },
     fallback:{
       "pg-native": false
     }

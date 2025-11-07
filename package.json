@@ -3,13 +3,13 @@
   "version": "1.0.0",
   "description": "Microservicio para reportes",
   "scripts": {
-    "dev": "ts-node local-server.ts",
-    "dev:watch": "nodemon --exec ts-node local-server.ts",
+    "dev": "ts-node -r tsconfig-paths/register local-server.ts",
+    "dev:watch": "nodemon --exec \"ts-node -r tsconfig-paths/register local-server.ts\"",
     "build": "tsc && webpack --mode production",
     "build:local": "tsc",
     "package": "npm run build && powershell Compress-Archive -Path dist/* -DestinationPath dist/lambda.zip -Force",
-    "deploy:lambda": "npm run package && aws lambda update-function-code --function-name ReporteMicroserviceFn --zip-file fileb://dist/lambda.zip",
-    "deploy": "npm run deploy:infra && npm run deploy:lambda",
+    "deploy:lambda": "npm run package && aws lambda update-function-code --function-name SigapReporteMsFn --zip-file fileb://dist/lambda.zip",
+    "deploy": "npm run package && npm run deploy:lambda",
     "test": "jest",
     "start": "node dist/local-server.js"
   },
@@ -31,6 +31,7 @@
     "nodemon": "^3.0.1",
     "ts-loader": "^9.5.4",
     "ts-node": "^10.9.1",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.9.2",
     "webpack": "^5.101.3",
     "webpack-cli": "^6.0.1"
