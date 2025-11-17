@@ -7,7 +7,11 @@ import { ReportePolizaRespDto } from '@/application/dto/response/reporte-poliza-
 export class PgReportePolizaRepository implements IReportePolizaRepository {
   constructor(private readonly pool: Pool) {}
 
-  async reportePolizaUsuario( nickname: string ): Promise<ReportePolizaRespDto> {
+  async reportePolizaUsuario( 
+    filter: string = '', 
+    desde: string | null = null, 
+    hasta: string | null = null, 
+    nickname: string ): Promise<ReportePolizaRespDto> {
     const resVencidas = await this.pool.query(Queries.poliza.statVencido(), [ nickname ]);
     const resPorVencer = await this.pool.query(Queries.poliza.statPorVencer(), [ nickname ]);
     const resSituacionMensual = await this.pool.query(Queries.poliza.statSituacionMensual(), [ nickname ]);

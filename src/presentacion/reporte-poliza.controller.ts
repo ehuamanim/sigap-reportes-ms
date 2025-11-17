@@ -1,7 +1,8 @@
-import { RespDto } from "@/application/dto/request/resp.dto";
+import { RespDto } from "@/application/dto/response/resp.dto";
 import { ReportePolizaRespDto } from "@/application/dto/response/reporte-poliza-resp.dto";
 import { ReportePolizaService } from "@/application/services/reporte-poliza.service";
 import { AuthContext } from "@/shared/commons/auth-context";
+import { ReqFilterDto } from "@/application/dto/request/req-filter.dto";
 
 export class ReportePolizaController {
   constructor(private readonly reportePolizaService: ReportePolizaService) { }
@@ -12,8 +13,8 @@ export class ReportePolizaController {
     this.authContext = authContext;
   }
 
-  async getReportePolizaStats(): Promise<RespDto<ReportePolizaRespDto>> {
-    const data = await this.reportePolizaService.getActiveProspectosCount(this.authContext.nickname);
+  async getReportePolizaStats( reqFilter: ReqFilterDto  ): Promise<RespDto<ReportePolizaRespDto>> {
+    const data = await this.reportePolizaService.getActiveProspectosCount(reqFilter, this.authContext.nickname);
     return RespDto.success(data);
   }
 

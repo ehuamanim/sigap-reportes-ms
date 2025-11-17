@@ -22,7 +22,7 @@ const controller = sigapApp.getReportePolizaController();
 
 const auth = {
     userId: "mockUserId",
-    nickname: "ehuamani",
+    nickname: "lMartel",
     role: "mockRole",
     clientIp: "mockClientIp",
 };
