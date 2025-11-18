@@ -29,9 +29,9 @@ const auth = {
 controller.setRequestContext(auth);
 
 // Rutas
-app.get('/reporte/poliza/stats', async (req, res) => {
+app.post('/reporte/poliza/stats', async (req, res) => {
   try {
-    const result = await controller.getReportePolizaStats();
+    const result = await controller.getReportePolizaStats( req.body );
     res.json( result );
   } catch (error) {
     console.error('Error:', error);

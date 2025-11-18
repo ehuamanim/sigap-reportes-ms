@@ -1,64 +1,35 @@
-// src/infrastructure/repositories/postgres-user.repository.ts
+// src/domain/repositories/pg-reporte-poliza.repository.ts
 import { Pool, QueryResult } from 'pg';
 import { IReportePolizaRepository } from './reporte-poliza.repository.interface';
 import { Queries } from '../queries/query-registry';
-import { ReportePolizaRespDto } from '@/application/dto/response/reporte-poliza-resp.dto';
+import { PolizaReporte } from '../entities/poliza-reporte.entity';
 
 export class PgReportePolizaRepository implements IReportePolizaRepository {
-  constructor(private readonly pool: Pool) {}
+  constructor(private readonly pool: Pool) { }
 
-  async reportePolizaUsuario( 
-    filter: string = '', 
-    desde: string | null = null, 
-    hasta: string | null = null, 
-    nickname: string ): Promise<ReportePolizaRespDto> {
-    const resVencidas = await this.pool.query(Queries.poliza.statVencido(), [ nickname ]);
-    const resPorVencer = await this.pool.query(Queries.poliza.statPorVencer(), [ nickname ]);
-    const resSituacionMensual = await this.pool.query(Queries.poliza.statSituacionMensual(), [ nickname ]);
-    const resTotal = await this.pool.query(Queries.poliza.statTotal(), [ nickname ]);
+  async reportePolizaUsuario(
+    desde: string | null = null,
+    hasta: string | null = null,
+    nickname: string): Promise<PolizaReporte> {
+    const polizaReport = await this.pool.query(Queries.poliza.polizaReport(), [desde, hasta, nickname]);
 
-    return new ReportePolizaRespDto(
-      PgReportePolizaRepository.getPolTotal(resTotal),
-      PgReportePolizaRepository.getPolSituacionMensual(resSituacionMensual).vigentes || 0,
-      PgReportePolizaRepository.getPolPorVencer(resPorVencer),
-      PgReportePolizaRepository.getPolVencidas(resVencidas),
-      PgReportePolizaRepository.getPolSituacionMensual(resSituacionMensual).anulados || 0,
+    return this.toDomain(polizaReport);
+  }
+
+  private toDomain(result: QueryResult<any>): PolizaReporte {
+    const row = result.rows[0];
+    if (!row) {
+      throw new Error('No data found');
+    }
+
+    console.log('Reporte Poliza Row:', row);
+
+    return new PolizaReporte(
+      Number(row.VIGENTE ?? 0),
+      Number(row.VENCIDO ?? 0),
+      Number(row.ANULADO ?? 0),
+      (Number(row.VIGENTE ?? 0)) + (Number(row.VENCIDO ?? 0))
     );
-  }
-
-
-  private static getPolTotal(result: QueryResult<any>): number {
-    return result.rows.length > 0 ? parseInt(result.rows[0].cantidad, 10) : 0;
-  }
-
-  private static getPolVencidas(result: QueryResult<any>): number {
-    return result.rows.length > 0 ? parseInt(result.rows[0].cantidad, 10) : 0;
-  }
-
-  private static getPolPorVencer(result: QueryResult<any>): number {
-    return result.rows.length > 0 ? parseInt(result.rows[0].cantidad, 10) : 0;
-  }
-
-  private static getPolSituacionMensual(result: QueryResult<any>): any {
-    const situacionPoliza: any = {}; 
-    result.rows.forEach(
-      (row) =>{
-
-        if( row.situacion_poliza === 'VIGENTE' ){
-          situacionPoliza.vigentes = parseInt(row.cantidad, 10);
-        }
-
-        if( row.situacion_poliza === 'VENCIDO' ){
-          situacionPoliza.vencidos = parseInt(row.cantidad, 10);
-        }
-
-        if( row.situacion_poliza === 'ANULADO' ){
-          situacionPoliza.anulados = parseInt(row.cantidad, 10);
-        }
-
-      });
-
-    return situacionPoliza;
   }
 
 }
