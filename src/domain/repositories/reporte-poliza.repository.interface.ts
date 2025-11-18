@@ -2,5 +2,9 @@ import { ReportePolizaRespDto } from "@/application/dto/response/reporte-poliza-
 
 
 export interface IReportePolizaRepository {
-  reportePolizaUsuario( nickname: string ): Promise<ReportePolizaRespDto>;
+  reportePolizaUsuario( 
+    filter: string, 
+    desde: string | null, 
+    hasta: string | null, 
+    nickname: string ): Promise<ReportePolizaRespDto>;
 }
