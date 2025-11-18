@@ -12,24 +12,27 @@ export class PgReportePolizaRepository implements IReportePolizaRepository {
     hasta: string | null = null,
     nickname: string): Promise<PolizaReporte> {
     const polizaReport = await this.pool.query(Queries.poliza.polizaReport(), [desde, hasta, nickname]);
+    const polizaNuevaReport = await this.pool.query(Queries.poliza.polizaNuevaReport(), [nickname]);
+    const polizaPorVencerReport = await this.pool.query(Queries.poliza.polizaPorVencerReport(), [nickname]);
 
-    return this.toDomain(polizaReport);
+    return this.toDomain(polizaReport, polizaNuevaReport, polizaPorVencerReport);
   }
 
-  private toDomain(result: QueryResult<any>): PolizaReporte {
+  private toDomain(result: QueryResult<any>, resultNueva: QueryResult<any>, resultPorVencer: QueryResult<any>): PolizaReporte {
     const row = result.rows[0];
-    if (!row) {
-      throw new Error('No data found');
-    }
+    const rowNueva = resultNueva.rows[0];
+    const rowPorVencer = resultPorVencer.rows[0];
 
-    console.log('Reporte Poliza Row:', row);
-
-    return new PolizaReporte(
+    let polizaReporte: PolizaReporte = new PolizaReporte(
       Number(row.VIGENTE ?? 0),
       Number(row.VENCIDO ?? 0),
       Number(row.ANULADO ?? 0),
-      (Number(row.VIGENTE ?? 0)) + (Number(row.VENCIDO ?? 0))
+      (Number(row.VIGENTE ?? 0)) + (Number(row.VENCIDO ?? 0)),
+      Number(rowPorVencer.POR_VENCER ?? 0),
+      Number(rowNueva.NUEVAS ?? 0)
     );
+
+    return polizaReporte;
   }
 
 }

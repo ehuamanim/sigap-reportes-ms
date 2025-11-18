@@ -4,5 +4,7 @@ import { loadSql } from "@/shared/database/sql-loader";
 export const Queries = {
     poliza: {
         polizaReport: () => loadSql('domain/queries/sql/poliza-report.sql'),
+        polizaNuevaReport: () => loadSql('domain/queries/sql/poliza-nueva-report.sql'),
+        polizaPorVencerReport: () => loadSql('domain/queries/sql/poliza-por-vencer-report.sql'),
     }
 } as const;

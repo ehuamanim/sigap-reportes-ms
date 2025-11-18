@@ -17,7 +17,9 @@ export class ReportePolizaService {
       polizaReporte.vigente,
       polizaReporte.vencido,
       polizaReporte.anulado,
-      polizaReporte.total
+      polizaReporte.total,
+      polizaReporte.porVencer,
+      polizaReporte.nueva
     );
   }
 }
