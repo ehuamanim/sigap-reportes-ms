@@ -19,7 +19,7 @@ const app = new App();
 const controller = app.getReportePolizaController();
 
 const routes = {
-  'GET /reporte/poliza/stats': (event: APIGatewayProxyEvent) => controller.getReportePolizaStats(),
+  'POST /reporte/poliza/stats': (event: APIGatewayProxyEvent) => controller.getReportePolizaStats( JSON.parse(event.body || '{}') ),
 };
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
