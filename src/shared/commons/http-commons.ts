@@ -7,7 +7,7 @@ export class HttpCommons {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
       },
-      body: JSON.stringify({ payload }),
+      body: JSON.stringify( payload ),
     };
   }
 
