@@ -9,11 +9,11 @@ export class PgReportePolizaRepository implements IReportePolizaRepository {
 
   async reportePolizaUsuario(
     desde: string | null = null,
-    hasta: string | null = null,
-    nickname: string): Promise<PolizaReporte> {
-    const polizaReport = await this.pool.query(Queries.poliza.polizaReport(), [desde, hasta, nickname]);
-    const polizaNuevaReport = await this.pool.query(Queries.poliza.polizaNuevaReport(), [nickname]);
-    const polizaPorVencerReport = await this.pool.query(Queries.poliza.polizaPorVencerReport(), [nickname]);
+    hasta: string | null = null
+  ): Promise<PolizaReporte> {
+    const polizaReport = await this.pool.query(Queries.poliza.polizaReport(), [desde, hasta]);
+    const polizaNuevaReport = await this.pool.query(Queries.poliza.polizaNuevaReport(), []);
+    const polizaPorVencerReport = await this.pool.query(Queries.poliza.polizaPorVencerReport(), []);
 
     return this.toDomain(polizaReport, polizaNuevaReport, polizaPorVencerReport);
   }

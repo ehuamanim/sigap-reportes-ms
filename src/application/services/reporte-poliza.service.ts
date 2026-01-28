@@ -10,8 +10,7 @@ export class ReportePolizaService {
   async getActiveProspectosCount(reqFilter: ReqFilterDto, username: string): Promise<ReportePolizaRespDto> {
     const polizaReporte: PolizaReporte = await this.reportePolizaRepository.reportePolizaUsuario(
       reqFilter.desde,
-      reqFilter.hasta,
-      username);
+      reqFilter.hasta);
 
     return new ReportePolizaRespDto(
       polizaReporte.vigente,
