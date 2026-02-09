@@ -43,6 +43,21 @@ app.post('/reporte/poliza/stats', async (req, res) => {
   }
 });
 
+app.get('/reporte/poliza/produccion', async (req, res) => {
+  try {
+    const anios = req.query.anios + '';
+    const result = await controller.getProduccionByAnio( anios.split(',') );
+    res.json( result );
+  } catch (error) {
+    console.error('Error:', error);
+    const statusCode = error.name === 'ClienteNotFoundException' ? 404 : 500;
+    res.status(statusCode).json({
+      message: error.message || 'Internal server error',
+      error: error.name || 'UnknownError'
+    });
+  }
+});
+
 // Ruta de health check
 app.get('/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });

@@ -20,6 +20,7 @@ const controller = app.getReportePolizaController();
 
 const routes = {
   'POST /reporte/poliza/stats': (event: APIGatewayProxyEvent) => controller.getReportePolizaStats( JSON.parse(event.body || '{}') ),
+  'POST /reporte/poliza/produccion': (event: APIGatewayProxyEvent) => controller.getProduccionByAnio( (event.queryStringParameters[ 'anios' ] ?? '').split(',') ),
 };
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
