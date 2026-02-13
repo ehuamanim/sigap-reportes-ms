@@ -1,10 +1,7 @@
 select
-    count(*) as "POR_VENCER"
+  count(*) as "POR_VENCER"
 from poliza.poliza p
-where p.estado = 'A'
-  and p.situacion_poliza <> 'ANULADO'  
-  and p.fecha_fin_vigencia >= CURRENT_DATE
-  and p.fecha_fin_vigencia < CURRENT_DATE + INTERVAL '60 days'  
+where p.estado_poliza = 'PV'
   and (
     $1::text is null or $1::text = '' or
     $2::text is null or $2::text = '' or
