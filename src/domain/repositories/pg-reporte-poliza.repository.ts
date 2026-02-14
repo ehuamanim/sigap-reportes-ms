@@ -32,24 +32,26 @@ export class PgReportePolizaRepository implements IReportePolizaRepository {
   }
 
   private toDomain(result: QueryResult<any>, resultNueva: QueryResult<any>, resultPorVencer: QueryResult<any>): PolizaReporte {
-    const row = result.rows[0];
-    const rowNueva = resultNueva.rows[0];
-    const rowPorVencer = resultPorVencer.rows[0];
-    const vigentesTotales = Number(row.VIGENTE ?? 0);
+    const row = result.rows[0] ?? {};
+    const rowNueva = resultNueva.rows[0] ?? {};
+    const rowPorVencer = resultPorVencer.rows[0] ?? {};
+
+    const vigente = Number(row.VIGENTE ?? 0);
+    const vencido = Number(row.VENCIDO ?? 0);
+    const anulado = Number(row.ANULADO ?? 0);
     const nuevas = Number(rowNueva.NUEVAS ?? 0);
     const porVencer = Number(rowPorVencer.POR_VENCER ?? 0);
-    const vigenteVerde = Math.max(0, vigentesTotales - nuevas - porVencer);
 
-    let polizaReporte: PolizaReporte = new PolizaReporte(
-      vigenteVerde,
-      Number(row.VENCIDO ?? 0),
-      Number(row.ANULADO ?? 0),
-      vigenteVerde + Number(row.VENCIDO ?? 0),
+    const total = vigente + vencido;
+
+    return new PolizaReporte(
+      vigente,
+      vencido,
+      anulado,
+      total,
       porVencer,
       nuevas
     );
-
-    return polizaReporte;
   }
 
 
