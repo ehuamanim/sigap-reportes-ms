@@ -6,5 +6,6 @@ export class PolizaReporte {
         public readonly total: number = 0,
         public readonly porVencer: number = 0,
         public readonly nueva: number = 0,
+        public readonly renovacion: number = 0,
     ) { }
 }

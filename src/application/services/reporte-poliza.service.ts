@@ -18,7 +18,8 @@ export class ReportePolizaService {
       polizaReporte.anulado,
       polizaReporte.total,
       polizaReporte.porVencer,
-      polizaReporte.nueva
+      polizaReporte.nueva,
+      polizaReporte.renovacion,
     );
   }
 }

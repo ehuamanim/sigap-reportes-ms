@@ -7,6 +7,7 @@ export class ReportePolizaRespDto {
     public readonly total: number,
     public readonly porVencer: number,
     public readonly nueva: number,
-  ) {}
+    public readonly renovacion: number,
+  ) { }
 
 }
