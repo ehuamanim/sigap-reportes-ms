@@ -3,7 +3,8 @@ select
   coalesce(sum(case when p.estado_poliza = 'VE' then 1 else 0 end), 0) as "VENCIDO",
   coalesce(sum(case when p.estado_poliza = 'AN' then 1 else 0 end), 0) as "ANULADO"
 from poliza.poliza p
-where
+where p.tipo_poliza = 'PO'
+and
   (
     $1::text is null or $1::text = '' or
     $2::text is null or $2::text = '' or
