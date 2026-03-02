@@ -28,28 +28,34 @@ export class PgReportePolizaRepository implements IReportePolizaRepository {
       params
     );
 
-     const polizaRenovadoReport = await this.pool.query(
+    const polizaRenovadoReport = await this.pool.query(
       Queries.poliza.polizaRenovadoReport(),
       params
     );
 
-    return this.toDomain(polizaReport, polizaNuevaReport, polizaPorVencerReport, polizaRenovadoReport);
+    const polizaTotalReport = await this.pool.query(
+      Queries.poliza.polizaTotalReport(),
+      params
+    );
+
+    return this.toDomain(polizaReport, polizaNuevaReport, polizaPorVencerReport, polizaRenovadoReport, polizaTotalReport);
   }
 
-  private toDomain(result: QueryResult<any>, resultNueva: QueryResult<any>, resultPorVencer: QueryResult<any>, resultRenovado: QueryResult<any>): PolizaReporte {
+  private toDomain(result: QueryResult<any>, resultNueva: QueryResult<any>, resultPorVencer: QueryResult<any>, resultRenovado: QueryResult<any>, resultTotal: QueryResult<any>): PolizaReporte {
     const row = result.rows[0] ?? {};
-    const rowNueva = resultNueva.rows[0] ?? {};    
+    const rowNueva = resultNueva.rows[0] ?? {};
     const rowPorVencer = resultPorVencer.rows[0] ?? {};
     const rowRenovado = resultRenovado.rows[0] ?? {};
+    const rowTotal = resultTotal.rows[0] ?? {};
 
     const vigente = Number(row.VIGENTE ?? 0);
     const vencido = Number(row.VENCIDO ?? 0);
     const anulado = Number(row.ANULADO ?? 0);
-    const nuevas = Number(rowNueva.NUEVAS ?? 0);  
+    const nuevas = Number(rowNueva.NUEVAS ?? 0);
     const porVencer = Number(rowPorVencer.POR_VENCER ?? 0);
     const renovadas = Number(rowRenovado.RENOVADAS ?? 0);
 
-    const total = vigente + vencido;
+    const total = Number(rowTotal.TOTAL ?? 0);
 
     return new PolizaReporte(
       vigente,
