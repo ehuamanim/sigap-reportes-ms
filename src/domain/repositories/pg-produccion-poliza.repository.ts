@@ -24,7 +24,6 @@ export class PgProduccionRepository implements IProduccionRepository {
     };
 
     for (const anio of anios) {
-      console.log("Anio", anio);
       const prodAnio = await this.pool.query(Queries.produccion.comisiones(), [
         anio.trim(),
       ]);
