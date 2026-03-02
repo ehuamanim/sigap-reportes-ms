@@ -1,7 +1,8 @@
 select
   count(*) as "TOTAL"
 from poliza.poliza p
-where p.tipo_poliza = 'PO'
+where p.estado = 'A'
+  and p.tipo_poliza = 'PO'
   and (
     $1::text is null or $1::text = '' or
     $2::text is null or $2::text = '' or
