@@ -1,7 +1,8 @@
 select
   count(*) as "RENOVADAS"
 from poliza.poliza p
-where p.estado_poliza = 'RE'
+where p.estado in ('A','F')
+  and p.estado_poliza = 'RE'
   and p.tipo_poliza = 'PO'
   and (
     $1::text is null or $1::text = '' or
