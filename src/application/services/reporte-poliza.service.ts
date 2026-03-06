@@ -8,9 +8,21 @@ export class ReportePolizaService {
   constructor(private readonly reportePolizaRepository: IReportePolizaRepository) { }
 
   async getActiveProspectosCount(reqFilter: ReqFilterDto, username: string): Promise<ReportePolizaRespDto> {
+    let role: string | null = null;
+
+    if (username) {
+      try {
+        role = await this.reportePolizaRepository.findRolByNickname(username);
+        console.log('🔍 [reporte] nickname:', username, '| role obtenido:', role);
+      } catch (error) {
+        console.error('Error al consultar rol del reporte:', error);
+      }
+    }
     const polizaReporte: PolizaReporte = await this.reportePolizaRepository.reportePolizaUsuario(
       reqFilter.desde,
-      reqFilter.hasta);
+      reqFilter.hasta,
+      username,
+      role);
 
     return new ReportePolizaRespDto(
       polizaReporte.vigente,

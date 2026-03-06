@@ -8,6 +8,8 @@ export const Queries = {
         polizaPorVencerReport: () => loadSql('domain/queries/sql/poliza-por-vencer-report.sql'),
         polizaRenovadoReport: () => loadSql('domain/queries/sql/poliza-renovado-report.sql'),
         polizaTotalReport: () => loadSql('domain/queries/sql/poliza-total-report.sql'),
+        findRolByNickname: () => loadSql('domain/queries/sql/poliza-find-rol-by.sql'),
+
     },
     produccion: {
         comisiones: () => loadSql('domain/queries/sql/prod-comisiones.sql')

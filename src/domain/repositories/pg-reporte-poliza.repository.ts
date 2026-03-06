@@ -9,9 +9,11 @@ export class PgReportePolizaRepository implements IReportePolizaRepository {
 
   async reportePolizaUsuario(
     desde: string | null = null,
-    hasta: string | null = null
+    hasta: string | null = null,
+    nickname: string | null = null,
+    role: string | null = null
   ): Promise<PolizaReporte> {
-    const params = [desde, hasta];
+    const params = [desde, hasta, nickname, role];
 
     const polizaReport = await this.pool.query(
       Queries.poliza.polizaReport(),
@@ -68,5 +70,9 @@ export class PgReportePolizaRepository implements IReportePolizaRepository {
     );
   }
 
+  async findRolByNickname(nickname: string): Promise<string | null> {
+    const result = await this.pool.query(Queries.poliza.findRolByNickname(),
+      [nickname]); return result.rows[0]?.rol_nombre || null;
+  }
 
 }
