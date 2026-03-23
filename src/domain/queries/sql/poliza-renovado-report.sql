@@ -2,7 +2,7 @@ select
   count(*) as "RENOVADAS"
 from poliza.poliza p
 where p.estado in ('A','F')
-  and p.estado_poliza = 'RE'
+  and p.origen_poliza = 'RE'
   and p.tipo_poliza = 'PO'
   and (
     $1::text is null or $1::text = '' or
@@ -13,4 +13,4 @@ where p.estado in ('A','F')
   $4::text IS NULL
   OR UPPER(TRIM($4::text)) <> UPPER('Referenciador')
   OR UPPER(TRIM(p.usuario_registro)) = UPPER(TRIM($3::text))
-)
+) 
