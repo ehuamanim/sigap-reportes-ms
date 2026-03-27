@@ -1,9 +1,10 @@
 select count(*) as "POR_VENCER"
 from poliza.poliza p
-where p.estado in ('A','F')  
+where p.estado = 'A'    
   and p.tipo_poliza = 'PO'
-  and p.fecha_fin_vigencia is not null
-  and p.fecha_fin_vigencia::date between current_date and (current_date + interval '60 day')::date
+  and p.estado_poliza = 'PV'  
+  --and p.fecha_fin_vigencia is not null
+  --and p.fecha_fin_vigencia::date between current_date and (current_date + interval '60 day')::date
   and (
     $1::text is null or $1::text = '' or
     $2::text is null or $2::text = '' or

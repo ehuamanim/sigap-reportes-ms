@@ -1,9 +1,9 @@
 select
   count(*) as "NUEVAS"
 from poliza.poliza p
-where p.estado in ('A','F')
-  and p.estado_poliza = 'NU'
+where p.estado = 'A'
   and p.tipo_poliza = 'PO'
+  and p.estado_poliza = 'NU'  
   and (
     $1::text is null or $1::text = '' or
     $2::text is null or $2::text = '' or
