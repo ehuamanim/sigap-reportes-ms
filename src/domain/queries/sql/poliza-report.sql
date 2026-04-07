@@ -1,14 +1,18 @@
-select
+SELECT
   count(*) filter (where p.estado_poliza = 'VI') as "VIGENTE",
   count(*) filter (where p.estado_poliza = 'VE') as "VENCIDO",
   count(*) filter (where p.estado_poliza = 'AN') as "ANULADO"
-from poliza.poliza p
-where p.estado = 'A' 
-  and p.tipo_poliza = 'PO'
-  and (
+FROM poliza.poliza p
+WHERE p.estado IN ('A', 'F') 
+  AND p.tipo_poliza = 'PO'
+  --AND p.poliza_id_anterior IS NULL 
+  AND (
     $1::text is null or $1::text = '' or
     $2::text is null or $2::text = '' or
-    p.fecha_ini_vigencia between to_date($1,'DD/MM/YYYY') and to_date($2,'DD/MM/YYYY')
+    (
+      p.fecha_ini_vigencia >= to_date($1,'DD/MM/YYYY')
+      AND p.fecha_ini_vigencia < to_date($2,'DD/MM/YYYY') + interval '1 day'
+    )
   )
   AND (
     $4::text IS NULL
