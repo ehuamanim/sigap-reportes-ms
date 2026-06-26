@@ -1,13 +1,13 @@
 select
   count(*) as "NUEVAS"
 from poliza.poliza p
-where p.estado = 'A'
+where p.estado IN ('A','F') 
   and p.tipo_poliza = 'PO'
-  and p.estado_poliza = 'NU'  
+  and p.origen_poliza = 'NU'  
   and (
     $1::text is null or $1::text = '' or
-    $2::text is null or $2::text = '' or
-    p.fecha_ini_vigencia between to_date($1,'DD/MM/YYYY') and to_date($2,'DD/MM/YYYY')
+    $2::text is null or $2::text = '' or    
+    (p.fecha_ini_vigencia AT TIME ZONE 'America/Lima')::date BETWEEN to_date($1,'DD/MM/YYYY') AND to_date($2,'DD/MM/YYYY')
   )
    AND (
   $4::text IS NULL

@@ -19,11 +19,27 @@ SELECT
         WHEN 12 THEN 'Diciembre'
     END AS mes_nombre,
     m.mes AS mes_numero,
-    SUM(COALESCE(p.monto_comision, p.monto_comision_aseg) * p.tipo_cambio_valor_soles) AS total_comision
+        
+    SUM(
+        ROUND(
+            (
+                COALESCE(
+                    NULLIF(p.monto_comision_aseg, 0),                    
+                    ROUND((p.prima_neta * (p.porcentaje_comision / 100.0))::numeric, 2) 
+                ) 
+                * COALESCE(NULLIF(p.tipo_cambio_valor_soles, 0), 1)
+            )::numeric, 
+            2 
+        )
+    ) AS total_comision
+
 FROM meses m
 LEFT JOIN poliza.poliza p 
     ON EXTRACT(MONTH FROM p.fecha_ini_vigencia) = m.mes
     AND EXTRACT(YEAR FROM p.fecha_ini_vigencia) = $1
-    AND p.estado = 'A'
+    AND p.estado IN ('A','F')
+    AND p.estado_poliza <> 'AN'   
+    AND p.tipo_poliza = 'PO' 
+    
 GROUP BY m.mes
 ORDER BY m.mes;
