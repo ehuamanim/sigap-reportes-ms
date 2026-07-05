@@ -27,4 +27,8 @@ export class ReportePolizaController {
     return RespDto.success( await this.produccionService.getProduccionByAnio( anios ) );
   }
 
+  async getProduccionByAnioPrima( anios: string[] ): Promise<RespDto<ProduccionRespDto>>{
+    return RespDto.success( await this.produccionService.getProduccionByAnioPrima( anios ) );
+  }
+
 }

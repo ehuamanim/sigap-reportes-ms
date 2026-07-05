@@ -5,4 +5,6 @@ export interface IProduccionRepository {
 
   getProduccionByAnio( anios: string[] ): Promise<ProduccionRespDto>;
 
+  getProduccionByAnioPrima( anios: string[] ): Promise<ProduccionRespDto>;
+
 }

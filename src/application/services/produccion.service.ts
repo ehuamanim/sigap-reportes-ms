@@ -8,4 +8,10 @@ export class ProduccionService {
   async getProduccionByAnio( anios: string[] ): Promise<ProduccionRespDto>{
     return this.produccionRepository.getProduccionByAnio( anios );
   }
+
+
+  async getProduccionByAnioPrima( anios: string[] ): Promise<ProduccionRespDto>{
+    return this.produccionRepository.getProduccionByAnioPrima( anios );
+  }
+
 }

@@ -12,6 +12,7 @@ export const Queries = {
 
     },
     produccion: {
-        comisiones: () => loadSql('domain/queries/sql/prod-comisiones.sql')
+        comisiones: () => loadSql('domain/queries/sql/prod-comisiones.sql'),
+        primas: () => loadSql('domain/queries/sql/prod-prima.sql')
     }
 } as const;
